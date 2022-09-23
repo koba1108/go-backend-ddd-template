@@ -1,0 +1,65 @@
+version: '3.9'
+
+services:
+  dev-setup:
+    build:
+      context: .
+      dockerfile: docker/go.Dockerfile
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: cp scripts/pre-commit.sh .git/hooks/pre-commit
+  api:
+    build:
+      context: .
+      dockerfile: docker/go.Dockerfile
+    volumes:
+      - .:/app
+    working_dir: /app
+    ports:
+      - "8081:8081"
+    restart: always
+    tty: true
+    environment:
+      ENV: dev
+      PORT: 8081
+      DB_DRIVER: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: public
+    env_file:
+      - .env
+    command: sh ./scripts/api.sh
+    depends_on:
+      - dev-setup
+      - mysql
+    networks:
+      - app_network
+
+  mysql:
+    image: mysql:8.0
+    restart: always
+    ports:
+      - "3306:3306"
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    volumes:
+      - ./docker/db/init:/docker-entrypoint-initdb.d
+      - ./docker/db/conf/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./docker/db/data/:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: public
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - app_network
+
+volumes:
+  db-data:
+    driver: local
+
+networks:
+  app_network:
+    driver: bridge
