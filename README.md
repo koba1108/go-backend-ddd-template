@@ -1,2 +1,2 @@
-# tekken-media-backend
-tekken-media-backend
+# go-backend-ddd-template
+go-backend-ddd-template
