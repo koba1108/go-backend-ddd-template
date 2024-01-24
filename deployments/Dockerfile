@@ -1,4 +1,4 @@
-FROM golang:1.18.6-alpine3.16 as build
+FROM golang:1.21.6-alpine3.19 as build
 
 # install build tools
 ENV ROOT=/go/src/app
