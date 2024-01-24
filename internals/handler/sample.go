@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/koba1108/go-backend-ddd-template/internals/usecase"
+	"net/http"
 )
 
 type SampleHandler interface {
@@ -11,6 +12,14 @@ type SampleHandler interface {
 	Post(c *gin.Context)
 	Put(c *gin.Context)
 	Delete(c *gin.Context)
+}
+
+type SampleListRequest struct {
+	Name    string `form:"name"`
+	Limit   int    `form:"limit"`
+	Offset  int    `form:"offset"`
+	SortKey string `form:"sortKey"`
+	IsDesc  bool   `form:"isDesc"`
 }
 
 type SampleCreateRequest struct {
@@ -38,7 +47,17 @@ type sampleHandler struct {
 // @Success 200 {object} []model.Sample
 // @Failure 400 {object} helper.Error
 func (sh *sampleHandler) List(c *gin.Context) {
-
+	var req SampleListRequest
+	if err := c.ShouldBindQuery(&req); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, err)
+		return
+	}
+	res, err := sh.sampleUsecase.Find(c, req.Name, req.Limit, req.Offset, req.SortKey, req.IsDesc)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, err)
+		return
+	}
+	c.JSON(http.StatusOK, res)
 }
 
 // Get godoc

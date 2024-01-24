@@ -11,6 +11,10 @@ type Sample struct {
 	Name string `json:"name"`
 }
 
+type SampleFindParams struct {
+	Name string `json:"name"`
+}
+
 func NewSample(name string) (*Sample, error) {
 	if name == "" {
 		return nil, ErrRequiredName

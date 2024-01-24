@@ -7,7 +7,7 @@ import (
 )
 
 type SampleUsecase interface {
-	Find(ctx context.Context, limit, offset int, sortKey string, isAsc bool) ([]*model.Sample, error)
+	Find(ctx context.Context, name string, limit, offset int, sortKey string, isAsc bool) ([]*model.Sample, error)
 }
 
 type sampleUsecase struct {
@@ -20,10 +20,13 @@ func NewSampleUsecase(r repository.SampleRepository) SampleUsecase {
 	}
 }
 
-func (u *sampleUsecase) Find(ctx context.Context, limit, offset int, sortKey string, isAsc bool) ([]*model.Sample, error) {
-	pagination, err := model.NewPagination(limit, offset, sortKey, isAsc)
+func (u *sampleUsecase) Find(ctx context.Context, name string, limit, offset int, sortKey string, isDesc bool) ([]*model.Sample, error) {
+	pagination, err := model.NewPagination(limit, offset, sortKey, isDesc)
 	if err != nil {
 		return nil, err
 	}
-	return u.repository.Find(ctx, pagination)
+	params := &model.SampleFindParams{
+		Name: name,
+	}
+	return u.repository.Find(ctx, params, pagination)
 }

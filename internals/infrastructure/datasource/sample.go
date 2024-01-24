@@ -2,6 +2,7 @@ package datasource
 
 import (
 	"context"
+	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/koba1108/go-backend-ddd-template/internals/domain/model"
 	"github.com/koba1108/go-backend-ddd-template/internals/domain/repository"
@@ -19,10 +20,22 @@ func (sr *sampleRepository) GetDB() *gorm.DB {
 	return sr.db
 }
 
-func (sr *sampleRepository) Find(ctx context.Context, p *model.Pagination) ([]*model.Sample, error) {
+func (sr *sampleRepository) Find(ctx context.Context, params *model.SampleFindParams, p *model.Pagination) ([]*model.Sample, error) {
 	var samples []*model.Sample
 	conn := sr.GetDB()
 	conn = conn.Limit(p.Limit).Offset(p.Offset)
+	if params != nil {
+		if params.Name != "" {
+			conn = conn.Where("name = ?", params.Name)
+		}
+		if p.SortKey == "" {
+			if p.IsDesc {
+				conn.Order(fmt.Sprintf("%s %s", p.SortKey, "desc"))
+			} else {
+				conn.Order(fmt.Sprintf("%s %s", p.SortKey, "asc"))
+			}
+		}
+	}
 	if err := conn.Find(&samples).Error; err != nil {
 		return nil, err
 	}

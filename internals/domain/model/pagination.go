@@ -10,12 +10,12 @@ var (
 
 type Pagination struct {
 	SortKey string `json:"sortKey"`
-	IsAsc   bool   `json:"isAsc"`
+	IsDesc  bool   `json:"isDesc"`
 	Limit   int    `json:"limit"`
 	Offset  int    `json:"offset"`
 }
 
-func NewPagination(limit, offset int, sortKey string, isAsc bool) (*Pagination, error) {
+func NewPagination(limit, offset int, sortKey string, isDesc bool) (*Pagination, error) {
 	if sortKey == "" {
 		return nil, ErrSortKeyRequired
 	}
@@ -28,7 +28,7 @@ func NewPagination(limit, offset int, sortKey string, isAsc bool) (*Pagination, 
 	return &Pagination{
 		Limit:   limit,
 		Offset:  offset,
-		IsAsc:   isAsc,
+		IsDesc:  isDesc,
 		SortKey: sortKey,
 	}, nil
 }
