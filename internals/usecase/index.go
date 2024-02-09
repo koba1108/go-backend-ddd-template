@@ -8,5 +8,6 @@ import (
 
 var Module = fx.Options(
 	fx.Provide(NewSampleUsecase, datasource.NewSampleRepository),
+	fx.Provide(NewSomethingUsecase, datasource.NewSomeRepository),
 	fx.Provide(NewAuthUsecase, externals.NewFirebaseAuthRepository),
 )

@@ -18,13 +18,18 @@ func main() {
 	).Run()
 }
 
-func NewGinEngine(sh handler.SampleHandler, ah handler.AuthHandler) {
+func NewGinEngine(
+	sh handler.SampleHandler,
+	ah handler.AuthHandler,
+	smh handler.SomethingHandler,
+) {
 	r := gin.Default()
 	r.Use(gin.Recovery())
 	r.Use(gin.Logger())
 	if err := r.SetTrustedProxies(nil); err != nil {
 		panic(fmt.Errorf("failed to set trusted proxies: %v", err))
 	}
+
 	api := r.Group("api")
 	{
 		apiV1 := api.Group("v1")
@@ -40,6 +45,10 @@ func NewGinEngine(sh handler.SampleHandler, ah handler.AuthHandler) {
 				apiV1Sample.POST("", sh.Post)
 				apiV1Sample.PUT(":id", sh.Put)
 				apiV1Sample.DELETE(":id", sh.Delete)
+			}
+			apiV1Something := apiV1.Group("something")
+			{
+				apiV1Something.GET("", smh.List)
 			}
 		}
 	}
