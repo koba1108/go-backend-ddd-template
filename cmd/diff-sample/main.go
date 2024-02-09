@@ -22,7 +22,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	sampleRepo := datasource.NewSampleRepository(db)
+	sampleRepo := datasource.NewSampleNextRepository(db)
 	sampleUsecase := usecase.NewSampleUsecase(sampleRepo)
 	sampleHandler := handler.NewSampleHandler(sampleUsecase)
 
