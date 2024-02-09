@@ -6,6 +6,6 @@ import (
 )
 
 var Module = fx.Options(
-	fx.Provide(config.NewDatabaseConfigConfig, NewGorm),
+	fx.Provide(config.NewDatabaseConfig, NewGorm),
 	fx.Provide(config.NewFirebaseConfig, NewFirebase),
 )
