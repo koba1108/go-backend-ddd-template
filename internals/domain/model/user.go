@@ -27,6 +27,9 @@ func (u *User) IsDeletable(ub *UserBank) error {
 	if !u.IsWithdrew {
 		return errors.New("user is not withdrew")
 	}
+	if u.ID != ub.UserId {
+		return errors.New("user bank is must be same user id")
+	}
 	if ub.IsActive() {
 		return errors.New("user bank is must be disabled")
 	}
