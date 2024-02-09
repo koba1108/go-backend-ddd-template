@@ -14,7 +14,7 @@ type DatabaseConfig struct {
 	DBName   string
 }
 
-func NewDatabaseConfigConfig() *DatabaseConfig {
+func NewDatabaseConfig() *DatabaseConfig {
 	return &DatabaseConfig{
 		Driver:   os.Getenv("DB_DRIVER"),
 		Host:     os.Getenv("DB_HOST"),
