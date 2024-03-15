@@ -12,6 +12,7 @@ type UserHandler interface {
 	Get(c *gin.Context)
 	Post(c *gin.Context)
 	Put(c *gin.Context)
+	Patch(c *gin.Context)
 	Delete(c *gin.Context)
 }
 
@@ -51,12 +52,18 @@ func (h *userHandler) Get(c *gin.Context) {
 }
 
 func (h *userHandler) Post(c *gin.Context) {
-	var req model.UserCreateInput
+	var req struct {
+		Username string `json:"username" binding:"required"`
+		Email    string `json:"email" binding:"required"`
+	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	user, err := h.userUsecase.Post(c, &req)
+	user, err := h.userUsecase.Create(c, &model.UserCreateInput{
+		Username: req.Username,
+		Email:    req.Email,
+	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -65,17 +72,60 @@ func (h *userHandler) Post(c *gin.Context) {
 }
 
 func (h *userHandler) Put(c *gin.Context) {
-	var req model.UserUpdateInput
+	var req struct {
+		ID         int     `uri:"id" binding:"required"`
+		Username   *string `json:"username"`
+		Email      *string `json:"email"`
+		IsWithdraw *bool   `json:"isWithdraw"`
+	}
+	if err := c.ShouldBindUri(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	user, err := h.userUsecase.Put(c, &req)
+	user, err := h.userUsecase.Update(c, &model.UserUpdateInput{
+		ID:         req.ID,
+		Username:   req.Username,
+		Email:      req.Email,
+		IsWithdraw: req.IsWithdraw,
+	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, user)
+}
+
+func (h *userHandler) Patch(c *gin.Context) {
+	var req struct {
+		ID         int     `uri:"id" binding:"required"`
+		Username   *string `json:"username"`
+		Email      *string `json:"email"`
+		IsWithdraw *bool   `json:"isWithdraw"`
+	}
+	if err := c.ShouldBindUri(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	user, err := h.userUsecase.Save(c, &model.UserUpdateInput{
+		ID:         req.ID,
+		Username:   req.Username,
+		Email:      req.Email,
+		IsWithdraw: req.IsWithdraw,
+	})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, user)
+
 }
 
 func (h *userHandler) Delete(c *gin.Context) {

@@ -61,6 +61,7 @@ func NewGinEngine(
 				apiV1User.GET(":id", uh.Get)
 				apiV1User.POST("", uh.Post)
 				apiV1User.PUT(":id", uh.Put)
+				apiV1User.PATCH(":id", uh.Patch)
 				apiV1User.DELETE(":id", uh.Delete)
 			}
 		}

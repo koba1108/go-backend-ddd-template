@@ -10,8 +10,9 @@ import (
 type UserUsecase interface {
 	List(ctx context.Context) ([]*model.User, error)
 	Get(ctx context.Context, userId int) (*model.User, error)
-	Post(ctx context.Context, input *model.UserCreateInput) (*model.User, error)
-	Put(ctx context.Context, input *model.UserUpdateInput) (*model.User, error)
+	Create(ctx context.Context, input *model.UserCreateInput) (*model.User, error)
+	Update(ctx context.Context, input *model.UserUpdateInput) (*model.User, error)
+	Save(ctx context.Context, input *model.UserUpdateInput) (*model.User, error)
 	Delete(ctx context.Context, userId int) error
 }
 
@@ -43,7 +44,7 @@ func (u *userUsecase) Get(ctx context.Context, userId int) (*model.User, error) 
 	return user, nil
 }
 
-func (u *userUsecase) Post(ctx context.Context, input *model.UserCreateInput) (*model.User, error) {
+func (u *userUsecase) Create(ctx context.Context, input *model.UserCreateInput) (*model.User, error) {
 	newUser, err := model.NewUser(input.Username, input.Email)
 	if err != nil {
 		return nil, err
@@ -54,7 +55,7 @@ func (u *userUsecase) Post(ctx context.Context, input *model.UserCreateInput) (*
 	return newUser, nil
 }
 
-func (u *userUsecase) Put(ctx context.Context, input *model.UserUpdateInput) (*model.User, error) {
+func (u *userUsecase) Update(ctx context.Context, input *model.UserUpdateInput) (*model.User, error) {
 	user, err := u.userRepository.GetByID(ctx, input.ID)
 	if err != nil {
 		return nil, err
@@ -73,6 +74,29 @@ func (u *userUsecase) Put(ctx context.Context, input *model.UserUpdateInput) (*m
 	}
 	if input.IsWithdraw != nil {
 		user.IsWithdraw = *input.IsWithdraw
+	}
+	return user, nil
+}
+
+func (u *userUsecase) Save(ctx context.Context, input *model.UserUpdateInput) (*model.User, error) {
+	user, err := u.userRepository.GetByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return nil, errors.New("user not found")
+	}
+	if input.Email != nil {
+		user.Email = *input.Email
+	}
+	if input.Username != nil {
+		user.Username = *input.Username
+	}
+	if input.IsWithdraw != nil {
+		user.IsWithdraw = *input.IsWithdraw
+	}
+	if user, err = u.userRepository.Save(ctx, user); err != nil {
+		return nil, err
 	}
 	return user, nil
 }

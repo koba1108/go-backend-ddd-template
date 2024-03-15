@@ -46,7 +46,7 @@ func (u *User) toDomainModel() *model.User {
 
 func (r *UserRepository) Find(ctx context.Context) ([]*model.User, error) {
 	var users []User
-	if err := r.db.Find(&users).Error; err != nil {
+	if err := r.db.WithContext(ctx).Find(&users).Error; err != nil {
 		return nil, err
 	}
 	var models []*model.User
@@ -58,7 +58,7 @@ func (r *UserRepository) Find(ctx context.Context) ([]*model.User, error) {
 
 func (r *UserRepository) GetByID(ctx context.Context, id int) (*model.User, error) {
 	var user User
-	if err := r.db.First(&user, "id = ?", id).Error; err != nil {
+	if err := r.db.WithContext(ctx).First(&user, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
 	return user.toDomainModel(), nil
@@ -66,14 +66,14 @@ func (r *UserRepository) GetByID(ctx context.Context, id int) (*model.User, erro
 
 func (r *UserRepository) Create(ctx context.Context, user *model.User) (*model.User, error) {
 	record := r.toDataModel(user)
-	if err := r.db.Create(record).Error; err != nil {
+	if err := r.db.WithContext(ctx).Create(record).Error; err != nil {
 		return nil, err
 	}
 	return record.toDomainModel(), nil
 }
 
 func (r *UserRepository) Update(ctx context.Context, input *model.UserUpdateInput) error {
-	if err := r.db.Updates(input).Error; err != nil {
+	if err := r.db.WithContext(ctx).Table("users").Updates(input).Error; err != nil {
 		return err
 	}
 	return nil
@@ -81,14 +81,14 @@ func (r *UserRepository) Update(ctx context.Context, input *model.UserUpdateInpu
 
 func (r *UserRepository) Save(ctx context.Context, user *model.User) (*model.User, error) {
 	record := r.toDataModel(user)
-	if err := r.db.Save(record).Error; err != nil {
+	if err := r.db.WithContext(ctx).Save(record).Error; err != nil {
 		return nil, err
 	}
 	return record.toDomainModel(), nil
 }
 
 func (r *UserRepository) Delete(ctx context.Context, userId int) error {
-	if err := r.db.Delete(&User{ID: userId}).Error; err != nil {
+	if err := r.db.WithContext(ctx).Delete(&User{ID: userId}).Error; err != nil {
 		return err
 	}
 	return nil
