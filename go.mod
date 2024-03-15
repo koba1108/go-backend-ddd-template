@@ -5,7 +5,6 @@ go 1.21.6
 require (
 	firebase.google.com/go v3.13.0+incompatible
 	github.com/gin-gonic/gin v1.9.1
-	github.com/jinzhu/gorm v1.9.16
 	go.uber.org/fx v1.20.1
 	google.golang.org/api v0.157.0
 	gorm.io/driver/mysql v1.5.4
@@ -73,6 +72,6 @@ require (
 	google.golang.org/genproto/googleapis/api v0.0.0-20240123012728-ef4313101c80 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240123012728-ef4313101c80 // indirect
 	google.golang.org/grpc v1.61.0 // indirect
-	google.golang.org/protobuf v1.32.0 // indirect
+	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
