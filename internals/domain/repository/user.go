@@ -6,6 +6,10 @@ import (
 )
 
 type UserRepository interface {
-	GetByID(ctx context.Context, id string) (*model.User, error)
-	Delete(ctx context.Context, user *model.User) error
+	Find(ctx context.Context) ([]*model.User, error)
+	GetByID(ctx context.Context, userId int) (*model.User, error)
+	Create(ctx context.Context, user *model.User) (*model.User, error)
+	Update(ctx context.Context, input *model.UserUpdateInput) error
+	Save(ctx context.Context, user *model.User) (*model.User, error)
+	Delete(ctx context.Context, userId int) error
 }

@@ -6,5 +6,5 @@ import (
 )
 
 type UserBankRepository interface {
-	GetByUserID(ctx context.Context, userId string) (*model.UserBank, error)
+	GetByUserID(ctx context.Context, userId int) (*model.UserBank, error)
 }

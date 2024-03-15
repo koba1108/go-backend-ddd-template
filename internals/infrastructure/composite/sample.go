@@ -3,10 +3,10 @@ package composite
 import (
 	"context"
 	"firebase.google.com/go/auth"
-	"github.com/jinzhu/gorm"
 	"github.com/koba1108/go-backend-ddd-template/internals/domain/model"
 	"github.com/koba1108/go-backend-ddd-template/internals/domain/service"
 	"github.com/koba1108/go-backend-ddd-template/internals/helper"
+	"gorm.io/gorm"
 )
 
 type sampleService struct {

@@ -1,13 +1,16 @@
 package client
 
 import (
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/koba1108/go-backend-ddd-template/internals/config"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 func NewGorm(conf *config.DatabaseConfig) (*gorm.DB, error) {
-	db, err := gorm.Open(conf.Driver, conf.DSN())
+	db, err := gorm.Open(mysql.Open(conf.DSN()), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		return nil, err
 	}

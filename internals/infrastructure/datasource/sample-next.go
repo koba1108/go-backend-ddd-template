@@ -3,9 +3,9 @@ package datasource
 import (
 	"context"
 	"fmt"
-	"github.com/jinzhu/gorm"
 	"github.com/koba1108/go-backend-ddd-template/internals/domain/model"
 	"github.com/koba1108/go-backend-ddd-template/internals/domain/repository"
+	"gorm.io/gorm"
 )
 
 type sampleNextRepository struct {

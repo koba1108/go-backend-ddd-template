@@ -1,13 +1,12 @@
 package usecase
 
 import (
-	"github.com/koba1108/go-backend-ddd-template/internals/infrastructure/datasource"
-	"github.com/koba1108/go-backend-ddd-template/internals/infrastructure/externals"
 	"go.uber.org/fx"
 )
 
 var Module = fx.Options(
-	fx.Provide(NewSampleUsecase, datasource.NewSampleRepository),
-	fx.Provide(NewSomethingUsecase, datasource.NewSomeRepository),
-	fx.Provide(NewAuthUsecase, externals.NewFirebaseAuthRepository),
+	fx.Provide(NewSampleUsecase),
+	fx.Provide(NewSomethingUsecase),
+	fx.Provide(NewAuthUsecase),
+	fx.Provide(NewUserUsecase),
 )
